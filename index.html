@@ -1,66 +1,41 @@
-<!DOCTYPE html>
-<html lang="ja">
+<!DOCTYPE html><html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>進化版note量産くん</title>
-  <link rel="manifest" href="manifest.json">
   <style>
     body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
     h1 { font-size: 24px; margin-bottom: 10px; }
     label { display: block; margin: 10px 0 5px; }
-    select, button, textarea {
+    select, button, textarea, input[type="number"] {
       width: 100%; padding: 8px; margin-bottom: 15px; font-size: 14px;
     }
     button { cursor: pointer; background: #0066cc; color: white; border: none; border-radius: 4px; }
-    textarea { height: 300px; resize: vertical; }
+    textarea { height: 200px; resize: vertical; }
   </style>
 </head>
 <body>
-  <h1>進化版note量産くん</h1>
+  <h1>進化版note量産くん</h1><label for="genre">ジャンル</label> <select id="genre"> <option>副業</option> <option>ライフスタイル</option> <option>スピリチュアル</option> <option>ブログ術</option> </select>
 
-  <label for="genre">ジャンル</label>
-  <select id="genre">
-    <option>副業</option>
-    <option>ライフスタイル</option>
-    <option>スピリチュアル</option>
-    <option>ブログ術</option>
-  </select>
+<label for="target">ターゲット層</label> <select id="target"> <option>主婦</option> <option>会社員</option> <option>学生</option> <option>副業初心者</option> </select>
 
-  <label for="target">ターゲット層</label>
-  <select id="target">
-    <option>主婦</option>
-    <option>会社員</option>
-    <option>学生</option>
-    <option>副業初心者</option>
-  </select>
+<label for="purpose">目的</label> <select id="purpose"> <option>収益</option> <option>共感</option> <option>教育</option> <option>宣伝</option> </select>
 
-  <label for="purpose">目的</label>
-  <select id="purpose">
-    <option>収益</option>
-    <option>共感</option>
-    <option>教育</option>
-    <option>宣伝</option>
-  </select>
+<label for="tone">文体（トーン）</label> <select id="tone"> <option>カジュアル</option> <option>熱意系</option> <option>セールス系</option> <option>感情訴求</option> </select>
 
-  <label for="tone">文体（トーン）</label>
-  <select id="tone">
-    <option>カジュアル</option>
-    <option>熱意系</option>
-    <option>セールス系</option>
-    <option>感情訴求</option>
-  </select>
+<label for="intro">導入スタイル</label> <select id="intro"> <option>共感・体験談</option> <option>ショックワード</option> <option>専門解説</option> </select>
 
-  <label for="output">出力形式</label>
-  <select id="output">
-    <option>構成だけ</option>
-    <option>本文まで作成（ストーリー＋How-to）</option>
-  </select>
+<label for="output">出力形式</label> <select id="output"> <option>構成だけ</option> <option>本文まで作成</option> </select>
 
-  <button onclick="generateNote()">noteを生成</button>
-  <textarea id="result" placeholder="ここに生成されたnoteが表示されます"></textarea>
-  <button onclick="copyText()">コピー</button>
-  <button onclick="resetForm()" style="background: #999;">リセット</button>
+<label for="length">文字数（おおよそ）</label> <input type="number" id="length" value="10000" min="500" step="500">
+
+<label for="bonus">特典をつけますか？</label> <select id="bonus"> <option>なし</option> <option>テンプレート</option> <option>ワークシート</option> <option>両方</option> </select>
+
+<label for="nudge">いいね・フォロー誘導</label> <select id="nudge"> <option>なし</option> <option>あり</option> </select>
+
+<button onclick="generateNote()">noteを生成</button>
+
+  <textarea id="result" placeholder="ここに生成されたnoteが表示されます"></textarea><button onclick="copyText()">コピー</button> <button onclick="resetForm()" style="background: #999;">リセット</button>
 
   <script>
     function generateNote() {
@@ -68,17 +43,32 @@
       const target = document.getElementById('target').value;
       const purpose = document.getElementById('purpose').value;
       const tone = document.getElementById('tone').value;
+      const intro = document.getElementById('intro').value;
       const output = document.getElementById('output').value;
+      const length = document.getElementById('length').value;
+      const bonus = document.getElementById('bonus').value;
+      const nudge = document.getElementById('nudge').value;
 
-      let result = '';
+      let result = `【ジャンル】${genre}\n【ターゲット】${target}\n【目的】${purpose}\n【トーン】${tone}\n【導入スタイル】${intro}\n【文字数】約${length}文字\n`;
 
       if (output === '構成だけ') {
-        result = `【ジャンル】${genre}\n【ターゲット】${target}\n【目的】${purpose}\n【トーン】${tone}\n\n以下は構成案です：\n1. 導入（ストーリー）\n2. 転機・気づき\n3. How-to手順\n4. まとめ・行動を促す言葉`;
+        result += `\n以下は構成案です：\n- はじめに（ストーリー＋How-to）\n- 本文\n- まとめ`;
       } else {
-        result = `【ジャンル】${genre}\n【ターゲット】${target}\n【目的】${purpose}\n【トーン】${tone}\n\n---\n私は、かつて${target}として「〇〇」に悩んでいました。\n\n毎日が不安で、何をしても空回りしていた時期…そんな中である一つの出来事がきっかけで、私の考え方が変わったんです。\n\n今回は、私が実際に試して効果があった【${genre}】の方法を、3ステップでご紹介します。\n\n---\n【ステップ1】●●を見直す\n【ステップ2】●●を取り入れる\n【ステップ3】●●を習慣化する\n\n---\nこの方法を取り入れてから、私の毎日はガラッと変わりました。\nあなたもぜひ、今日から試してみてくださいね。`;
+        result += `\n以下は本文案です：\n${generateRandomStory(target, intro, tone, length)}\n`;
+        if (bonus !== 'なし') {
+          result += `\n【特典付き】\n→ ${bonus} をダウンロード可能にする案を追加`;
+        }
+        if (nudge === 'あり') {
+          result += `\n\nこの記事が参考になったら、ぜひ「いいね」や「フォロー」をお願いします！`;
+        }
       }
 
       document.getElementById('result').value = result;
+    }
+
+    function generateRandomStory(target, intro, tone, length) {
+      const base = `${target}が抱える悩みに寄り添いながら、${intro}な形で始まり、${tone}なトーンで読者を惹きつけます。\n\n（ここに${length}文字相当の本文をAIで生成します）`;
+      return base;
     }
 
     function copyText() {
@@ -89,16 +79,8 @@
 
     function resetForm() {
       document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+      document.getElementById('length').value = 10000;
       document.getElementById('result').value = '';
     }
-  </script>
-
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('service-worker.js');
-      });
-    }
-  </script>
-</body>
+  </script></body>
 </html>
